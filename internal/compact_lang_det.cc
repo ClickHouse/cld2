@@ -88,9 +88,9 @@ Language DetectLanguage(
                           &text_bytes,
                           is_reliable);
   // Default to English
-  if (lang == UNKNOWN_LANGUAGE) {
-    lang = ENGLISH;
-  }
+  // if (lang == UNKNOWN_LANGUAGE) {
+  //   lang = ENGLISH;
+  // }
   return lang;
 }
 
