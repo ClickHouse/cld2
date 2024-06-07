@@ -475,12 +475,6 @@ void PrintText(FILE* f, Language cur_lang, const string& temp) {
 
 
 //------------------------------------------------------------------------------
-// For --cld_html debugging output. Not thread safe
-//------------------------------------------------------------------------------
-static Language prior_lang = UNKNOWN_LANGUAGE;
-static bool prior_unreliable = false;
-
-//------------------------------------------------------------------------------
 // End For --cld_html debugging output
 //------------------------------------------------------------------------------
 
@@ -1223,27 +1217,6 @@ void PrintLang(FILE* f, Tote* chunk_tote,
   }
 }
 
-
-void PrintTopLang(Language top_lang) {
-  if ((top_lang == prior_lang) && (top_lang != UNKNOWN_LANGUAGE)) {
-    fprintf(stderr, "[] ");
-  } else {
-    fprintf(stderr, "[%s] ", LanguageName(top_lang));
-    prior_lang = top_lang;
-  }
-}
-
-void PrintTopLangSpeculative(Language top_lang) {
-  fprintf(stderr, "<span style=\"color:#%06X;\">", 0xa0a0a0);
-  if ((top_lang == prior_lang) && (top_lang != UNKNOWN_LANGUAGE)) {
-    fprintf(stderr, "[] ");
-  } else {
-    fprintf(stderr, "[%s] ", LanguageName(top_lang));
-    prior_lang = top_lang;
-  }
-  fprintf(stderr, "</span>\n");
-}
-
 void PrintLangs(FILE* f, const Language* language3, const int* percent3,
                 const int* text_bytes, const bool* is_reliable) {
   fprintf(f, "<br>&nbsp;&nbsp;Initial_Languages ");
@@ -1830,10 +1803,6 @@ Language DetectLanguageSummaryV2(
   // Varying short-span limit doesn't work well -- skips too much beyond 20KB
   // int spantooshortlimit = advance_by * FLAGS_cld_smoothwidth;
   int spantooshortlimit = kShortSpanThresh;
-
-  // For debugging only. Not thread-safe
-  prior_lang = UNKNOWN_LANGUAGE;
-  prior_unreliable = false;
 
   // Allocate full-document prediction table for finding repeating words
   int hash = 0;
