@@ -919,11 +919,13 @@ bool ScriptScanner::GetOneScriptSpan(LangSpan* span) {
           need_break = true;
         } else {
           // Look at next following character, ignoring entity as Common
-          int sc2 = GetUTF8LetterScriptNum(next_byte_ + take + tlen);
-          if ((sc2 != ULScript_Common) && (sc2 != spanscript)) {
-            // We found a non-trivial change of script
-            if (one_script_only_) {
-              need_break = true;
+          if (take + tlen < byte_length_) {
+            int sc2 = GetUTF8LetterScriptNum(next_byte_ + take + tlen);
+            if ((sc2 != ULScript_Common) && (sc2 != spanscript)) {
+              // We found a non-trivial change of script
+              if (one_script_only_) {
+                need_break = true;
+              }
             }
           }
         }
