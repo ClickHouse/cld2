@@ -772,7 +772,8 @@ bool ScriptScanner::GetOneTextSpan(LangSpan* span) {
   }
 
   // Almost done. Back up to a character boundary if needed
-  while ((0 < take) && ((next_byte_[take] & 0xc0) == 0x80)) {
+  while ((0 < take) && (take < byte_length_) &&
+         ((next_byte_[take] & 0xc0) == 0x80)) {
     // Back up over continuation byte
     --take;
     --put;
@@ -917,7 +918,7 @@ bool ScriptScanner::GetOneScriptSpan(LangSpan* span) {
         // Might need to break this script span
         if (sc == ULScript_Common) {
           need_break = true;
-        } else {
+        } else if (take + tlen < byte_length_) {
           // Look at next following character, ignoring entity as Common
           int sc2 = GetUTF8LetterScriptNum(next_byte_ + take + tlen);
           if ((sc2 != ULScript_Common) && (sc2 != spanscript)) {
